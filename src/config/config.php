@@ -56,7 +56,7 @@ return [
     | translated attributes as fillable.
     |
     | WARNING!
-    | Set this to true only if you understand the security risks.
+    | Set this to true only if you know what the security risks are.
     |
     */
     'always_fillable' => false,

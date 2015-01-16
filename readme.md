@@ -2,7 +2,7 @@ Laravel-Translatable
 ====================
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/dimsav/laravel-translatable.svg)](https://packagist.org/packages/dimsav/laravel-translatable)
-[![Build Status](https://travis-ci.org/dimsav/laravel-translatable.svg?branch=v4.3)](https://travis-ci.org/dimsav/laravel-translatable)
+[![Build Status](https://travis-ci.org/dimsav/laravel-translatable.svg?branch=master)](https://travis-ci.org/dimsav/laravel-translatable)
 [![Code Coverage](https://scrutinizer-ci.com/g/dimsav/laravel-translatable/badges/coverage.png?s=da6f88287610ff41bbfaf1cd47119f4333040e88)](https://scrutinizer-ci.com/g/dimsav/laravel-translatable/)
 [![License](https://poser.pugx.org/dimsav/laravel-translatable/license.svg)](https://packagist.org/packages/dimsav/laravel-translatable)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c105358a-3211-47e8-b662-94aa98d1eeee/mini.png)](https://insight.sensiolabs.com/projects/c105358a-3211-47e8-b662-94aa98d1eeee)
@@ -13,19 +13,11 @@ If you want to store translations of your models into the database, this package
 
 * [Demo](#what-is-this-package-doing)
 * [Installation](#installation-in-4-steps)
+* [Laravel versions](#laravel-versions)
 * [Support](#support)
 * [FAQ](#faq)
+* [Version History](#version-history)
 
-## Laravel compatibility
-
-!! Version 5 will be stable after laravel 5 is released
-
- Laravel  | Translatable
-:---------|:----------
- 4.0.x    | 4.3.x
- 4.1.x    | 4.4.x
- 4.2.x    | 4.4.x
- 5.0.x    | 5.x
 
 ## Demo
 
@@ -71,23 +63,23 @@ Filling multiple translations
 
 ## Installation in 4 steps
 
-### Step 1: Install package
+### Step 1
 
-Add the package in your composer.json by executing the command.
+Add the package in your composer.json file and run `composer update`.
 
-```bash
-composer require dimsav/laravel-translatable
+```json
+{
+    "require": {
+        "dimsav/laravel-translatable": "4.3.*"
+    }
+}
 ```
 
-Next, add the service provider to `app/config/app.php`
+### Step 2
 
-```
-'Dimsav\Translatable\TranslatableServiceProvider',
-```
+Let's say you have a model `Country`. To save the translations of countries you need one extra table `country_translations`.
 
-### Step 2: Migrations
-
-In this example, we want to translate the model `Country`. We will need an extra table `country_translations`:
+Create your migrations:
 
 ```php
 Schema::create('countries', function(Blueprint $table)
@@ -109,7 +101,9 @@ Schema::create('country_translations', function(Blueprint $table)
 });
 ```
 
-### Step 3: Models
+### Step 3
+
+The models:
 
 1. The translatable model `Country` should [use the trait](http://www.sitepoint.com/using-traits-in-php-5-4/) `Dimsav\Translatable\Translatable`. 
 2. The convention for the translation model is `CountryTranslation`.
@@ -137,32 +131,50 @@ class CountryTranslation extends Eloquent {
 
 The array `$translatedAttributes` contains the names of the fields being translated in the "Translation" model.
 
-### Step 4: Configuration
+### Step 4
 
-```bash
-php artisan config:publish dimsav/laravel-translatable
+Optionally, edit the default locale.
+
+```php
+// app/config/app.php
+
+return array(
+
+  // Just enter this array somewhere near your default locale
+  'locales' => array('en', 'fr', 'es'),
+
+  // The default locale
+  'locale' => 'en',
+
+  // Override the default 'Translation' class suffix
+  // to use CountryTrans instead of CountryTranslation
+  'translatable_suffix' => 'Trans'
+
+);
 ```
 
-With this command, initialize the configuration and modify the created file, located under `app/config/packages/dimsav/laravel-translatable/config.php`.
+*Note: There isn't any restriction for the format of the locales. Feel free to use whatever suits you better, like "eng" instead of "en", or "el" instead of "gr".  The important is to define your locales and stick to them till the end.*
 
-*Note: There isn't any restriction for the format of the locales. Feel free to use whatever suits you better, like "eng" instead of "en", or "el" instead of "gr".  The important is to define your locales and stick to them.*
 
+## Laravel versions
+
+Laravel versions `4.0`, `4.1` and `4.2` play nice with the package.
 
 ## FAQ
 
-#### I need help!
+### I need help!
 
 Got any question or suggestion? Feel free to open an [Issue](https://github.com/dimsav/laravel-translatable/issues/new).
 
-#### I want to help!
+### I want to help!
 
 You are awesome! Watched the repo and reply to the issues. You will help offering a great experience to the users of the package. `#communityWorks`
 
-#### Is this compatible with Ardent?
+### Is this compatible with Ardent?
 
 Translatable is fully compatible with all kinds of Eloquent extensions, including Ardent. If you need help to implement Translatable with these extensions, see this [example](https://gist.github.com/dimsav/9659552).
 
-#### Why do I get a mysql error while running the migrations?
+### Why do I get a mysql error while running the migrations?
 
 If you see the following mysql error:
 
@@ -176,7 +188,7 @@ SQLSTATE[HY000]: General error: 1005 Can't create table 'my_database.#sql-455_63
 
 Then your tables have the MyISAM engine which doesn't allow foreign key constraints. MyISAM was the default engine for mysql versions older than 5.5. Since [version 5.5](http://dev.mysql.com/doc/refman/5.5/en/innodb-default-se.html), tables are created using the InnoDB storage engine by default.
 
-##### How to fix
+#### How to fix
 
 For tables already created in production, update your migrations to change the engine of the table before adding the foreign key constraint.
 
@@ -204,46 +216,39 @@ Schema::create('language_translations', function(Blueprint $table){
 
 The best solution though would be to update your mysql version. And **always make sure you have the same version both in development and production environment!**
 
-#### Can I use translation fallbacks?
 
-If you want to fallback to a default translation if a translation has not been found, you can specify that on the model using `$model->useTranslationFallback = true`.
+## Version History
 
-```php
-App::make('config')->set('translatable::fallback_locale', 'en');
+### v. 4.3
 
-$country = Country::create(['iso' => 'gr']);
-$country->translate('en')->name = 'Greece';
-$country->useTranslationFallback = true;
+* The `Translation` class suffix default can be overridden in the app config. See [7ecc0a75d](https://github.com/dimsav/laravel-translatable/commit/7ecc0a75dfcec58ebf694e0a7feb686294b49847)
+* The `app.fallback_locale` setting can be overridden in each model separately. See [#33](https://github.com/dimsav/laravel-translatable/pull/33)
+* Fallback translation is not returned if it is not defined.
 
-$country->translate('de')->locale; // en
-$country->translate('de')->name; // Greece
-```
+### v. 4.2
 
-You can also overwrite `useTranslationFallback` with a second parameter on `translate()`, so new translations can be created or existing ones used. Without the second parameter, `translate('de')` would return the fallback translation.
+* Fallback locale now is taken from `app.fallback_locale` config key.
 
-```php
-App::make('config')->set('translatable::fallback_locale', 'en');
+### v. 4.1.1
 
-$country = Country::create(['iso' => 'gr']);
-$country->useTranslationFallback = true;
-$country->translate('en', false)->name = 'Greece';
-$country->translate('de', false)->name = 'Griechenland';
+* Fixed issue with saving translations, caused by the update of the laravel core.
 
-$country->translate('de')->locale; // de
-$country->translate('de')->name; // Griechenland
-```
+### v. 4.1
+* Added [fallback](https://github.com/dimsav/laravel-translatable/issues/23) to default locale if translations is missing.
+* Added travis environment for laravel 4.2.
 
-When using `fill`, this is done automatically for you:
+### v. 4.0
+* Removed syntax `$model->en->name` because conflicts may happen if the model has a property named `en`. See [#18](https://github.com/dimsav/laravel-translatable/issues/18).
+* Added method `hasTranslation($locale)`. See [#19](https://github.com/dimsav/laravel-translatable/issues/19).
 
-```php
-$country = new Country;
-$country->useTranslationFallback = true;
-$country->fill([
-  'iso' => 'gr',
-  'en' => ['name' => 'Greece'],
-  'de' => ['name' => 'Griechenland'],
-]);
+### v. 3.0
+* Fixed bug #7. Model's Translations were deleted when the model delete failed.
 
-$country->translate('de')->locale; // de
-$country->translate('de')->name; // Griechenland
-```
+### v. 2.0
+* Translatable is now a trait and can be used as add-on to your models.
+* 100% code coverage
+
+### v. 1.0
+* Initial version
+* Translatable is a class extending Eloquent
+* 96% code coverage

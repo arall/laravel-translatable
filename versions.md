@@ -1,20 +1,14 @@
 ## Version History
 
-### v. 5
-
-* Laravel 5 ready
-
 ### v. 4.4
 
-* Drops support for laravel 4.0.
-* Compatible with laravel 4.1 and laravel 4.2.
-* External config file.
-* Fallback issue fixed.
-* Added translated and translatedIn scopes.
-* Changed behavior: getting non existing translations with `getTranslation()` used to return objects, now `null` is returned.
-* Translated attributes now shown when converting `toArray()` or `toJson()`.
-* Fixed bug: fill() created empty translations even when translated attributes were not fillable.
-* Added option to make translated attributes always fillable.
+ * External config file
+ * Fallback issue fixed
+ * Added translated and translatedIn scopes
+ * Changed behavior: getting non existing translations with `getTranslation()` used to return objects, now `null` is returned.
+ * Translated attributes now shown when converting toArray() or toJson().
+ * Fixed bug: fill() created empty translations even when translated attributes were not fillable
+ * Added option to make translated attributes always fillable
 
 ### v. 4.3
 

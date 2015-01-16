@@ -88,6 +88,7 @@ trait Translatable {
     public function getTranslationModelNameDefault()
     {
         $config = App::make('config');
+
         return get_class($this) . $config->get('translatable::translation_suffix', 'Translation');
     }
 
@@ -226,7 +227,7 @@ trait Translatable {
         if (empty($locales))
         {
             throw new LocalesNotDefinedException('Please make sure you have run "php artisan config:publish dimsav/laravel-translatable" '.
-            ' and that the locales configuration is defined.');
+                ' and that the locales configuration is defined.');
         }
         return $locales;
     }
