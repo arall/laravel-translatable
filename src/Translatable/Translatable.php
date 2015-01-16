@@ -111,11 +111,10 @@ trait Translatable {
     {
         if ($this->isKeyReturningTranslationText($key))
         {
-            if ($this->getTranslation() === null)
+            if ($this->getTranslation() !== null)
             {
-                return null;
+                return $this->getTranslation()->$key;
             }
-            return $this->getTranslation()->$key;
         }
         return parent::getAttribute($key);
     }
