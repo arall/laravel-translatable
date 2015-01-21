@@ -122,14 +122,7 @@ trait Translatable {
 
     public function setAttribute($key, $value)
     {
-        if (in_array($key, $this->translatedAttributes))
-        {
-            $this->getTranslationOrNew(App::getLocale())->$key = $value;
-        }
-        else
-        {
-            parent::setAttribute($key, $value);
-        }
+        parent::setAttribute($key, $value);
     }
 
     public function save(array $options = array())
